@@ -13,9 +13,10 @@ namespace zich
         vector<double> data;
 
     // public:
+        Matrix(const int row,const int col);
         Matrix(const vector<double> data, const int row, const int col);
         // ~Matrix();
-        Matrix operator+(const Matrix &mat);
+        Matrix operator+(Matrix const &mat);
         Matrix& operator++();
         Matrix operator++(const int num);
         Matrix& operator+=(const Matrix &mat);
@@ -40,7 +41,8 @@ namespace zich
         double multiplication(const Matrix &mat, const int tempRow, const int tempCol);
         double sumMatrix();
         // friend ostream& operator<<(ostream& output, const Matrix& mat);
-        friend ostream& operator<< (ostream& output, const Matrix& mat);
+        // friend ostream& operator<< (ostream& output, const Matrix& mat);
+        friend ostream & operator << (ostream &out, const Matrix &mat);
         friend istream& operator>> (istream &os , Matrix& mat);
         friend Matrix operator-(Matrix &mat);
         friend Matrix operator*(const double scalar, Matrix &mat);

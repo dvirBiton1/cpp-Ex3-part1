@@ -1,5 +1,15 @@
 #include "Matrix.hpp"
-using namespace zich;
+namespace zich{
+Matrix::Matrix(const int row, const int col)
+{
+    if (row <= 0 || col <= 0)
+    {
+        throw runtime_error("row or col can't be negative");
+    }
+    vector<double> data;
+    this->row = row;
+    this->col = col;
+}
 
 Matrix::Matrix(const vector<double> data, const int row, const int col)
 {
@@ -13,21 +23,22 @@ Matrix::Matrix(const vector<double> data, const int row, const int col)
     this->col = col;
 }
 
-Matrix Matrix::operator+(const Matrix &mat)
+Matrix Matrix::operator+(Matrix const &mat)
 {
     if (this->row != mat.row || this->col != mat.row)
     {
         throw runtime_error("row and col must be equal");
     }
-    vector<double> mat3_data;
+    Matrix mat3(row, col);
+    mat3.data.resize(row * col);
+    // cout<<mat3.data[size_t(1 * (col) + 1)]<<endl;
     for (int i = 0; i < row; i++)
     {
         for (int j = 0; j < col; j++)
         {
-            mat3_data[size_t(i * col + j)] = mat.data[size_t(i * col + j)] + this->data[size_t(i * col + j)];
+            mat3.data[size_t(i * col + j)] = mat.data[size_t(i * col + j)] + this->data[size_t(i * col + j)];
         }
     }
-    Matrix mat3(mat3_data, row, col);
     return mat3;
 }
 Matrix &Matrix::operator++()
@@ -255,24 +266,24 @@ bool Matrix::operator!=(Matrix &mat)
     }
     return false;
 }
-ostream& operator<<(ostream &output, const Matrix& mat){
+ostream & operator << (ostream &out, const Matrix &mat){
     for (int i = 0; i < mat.row; i++)
     {
-        output << '[';
+        out << '[';
         for (int j = 0; j < mat.col; j++)
         {   
-            if (j != mat.col )
+            if (j != mat.col -1 )
             {
-                output << mat.data[size_t(i * mat.col + j)] << ' ';
+                out << mat.data[size_t(i * mat.col + j)] << ' ';
             }
             else{
-                output <<mat.data[size_t(i * mat.col + j)];
+                out <<mat.data[size_t(i * mat.col + j)];
             }
         }
-        output << ']' << '\n';
+        out << ']' << '\n';
     }
-    return output;
-    
+    return out;
+}
 }
 
 //  Matrix::Matrix(/* args */)
