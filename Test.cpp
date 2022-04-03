@@ -17,13 +17,99 @@
 using namespace std;
 using namespace zich;
 
-// TEST_CASE("Good input")
-// {
+TEST_CASE("Good input")
+{
+    SUBCASE(" * with identity")
+    {
+    vector<double> identity1 = {1, 0, 0, 0, 1, 0, 0, 0, 1};// identity matrix 3*3
+    vector<double> identity3 = {3, 0, 0, 0, 3, 0, 0, 0, 3};// identity*3 matrix 3*3   
+    Matrix identity{identity1, 3, 3};
+    Matrix mat3_identity{identity3, 3, 3};
+    CHECK_MESSAGE((identity * mat3_identity == mat3_identity) == true, "\noutput:\n"
+                                                         << (identity * mat3_identity) << "expected:\n"
+                                                         << mat3_identity);
+    CHECK_MESSAGE((mat3_identity * identity == mat3_identity) == true, "\noutput:\n"
+                                                         << (mat3_identity * identity) << "expected:\n"
+                                                         << mat3_identity);
+    }
+    SUBCASE(" *= ")
+    {
+    vector<double> mat3v = {1, 2, 3, 4, 5, 6}; // matrix 2*3
+    vector<double> mat4v = {1, 2, 3, 4, 5, 6}; // matrix 3*2
+    vector<double> mat3_4v = {22,28,49,64}; // matrix 2*2
+    Matrix mat3(mat3v,2,3);
+    Matrix mat4(mat4v,3,2);
+    Matrix mat3_4(mat3_4v,2,2);
+    CHECK_MESSAGE((mat3 * mat4 == mat3_4) == true, "\noutput:\n"
+                                                         << (mat3 * mat4) << "expected:\n"
+                                                         << mat3_4);
+    mat3 *= mat4;
+    CHECK_MESSAGE((mat3 == mat3_4) == true, "\noutput:\n"
+                                                         << (mat3) << "expected:\n"
+                                                         << mat3_4);
+    }
+    SUBCASE(" +, ++ , +=  ")
+    {
+    vector<double> mat3v = {1, 2, 3, 4}; // matrix 2*2
+    vector<double> mat4v = {1, 2, 3, 4}; // matrix 2*2
+    vector<double> mat3_4v = {2,4,6,8}; // matrix 2*2
+    vector<double> mat3_4_1v = {3,5,7,9}; // matrix 2*2
+    Matrix mat3(mat3v,2,2);
+    Matrix mat4(mat4v,2,2);
+    Matrix mat3_4(mat3_4v,2,2);
+    Matrix mat3_4_1(mat3_4_1v,2,2);
+    CHECK_MESSAGE((mat3 + mat4 == mat3_4) == true, "\noutput:\n"
+                                                         << (mat3 + mat4) << "expected:\n"
+                                                         << mat3_4);
+    mat3 += mat4;
+    CHECK_MESSAGE((mat3 == mat3_4) == true, "\noutput:\n"
+                                                         << (mat3) << "expected:\n"
+                                                         << mat3_4);
+    mat3_4++;                                                     
+    CHECK_MESSAGE((mat3_4 == mat3_4_1) == true, "\noutput:\n"
+                                                         << (mat3_4) << "expected:\n"
+                                                         << mat3_4_1);
+    }
+    SUBCASE(" -, -- , -=  ")
+    {
+    vector<double> mat3v = {1, 2, 3, 4}; // matrix 2*2
+    vector<double> mat4v = {1, 2, 3, 4}; // matrix 2*2
+    vector<double> mat3_4v = {0,0,0,0}; // matrix 2*2
+    vector<double> mat3_4_1v = {-1,-1,-1,-1}; // matrix 2*2
+    Matrix mat3(mat3v,2,2);
+    Matrix mat4(mat4v,2,2);
+    Matrix mat3_4(mat3_4v,2,2);
+    Matrix mat3_4_1(mat3_4_1v,2,2);
+    CHECK_MESSAGE((mat3 - mat4 == mat3_4) == true, "\noutput:\n"
+                                                         << (mat3 - mat4) << "expected:\n"
+                                                         << mat3_4);
+    mat3 -= mat4;
+    CHECK_MESSAGE((mat3 == mat3_4) == true, "\noutput:\n"
+                                                         << (mat3) << "expected:\n"
+                                                         << mat3_4);
+    mat3_4--;                                                     
+    CHECK_MESSAGE((mat3_4 == mat3_4_1) == true, "\noutput:\n"
+                                                         << (mat3_4) << "expected:\n"
+                                                         << mat3_4_1);
+    }
+    SUBCASE(" scalar *, *=  ")
+    {
+    vector<double> mat3v = {1, 2, 3, 4}; // matrix 2*2
+    vector<double> mat4v = {1, 2, 3, 4}; // matrix 2*2
+    vector<double> mat3_4v = {2,4,6,8}; // matrix 2*2
+    Matrix mat3(mat3v,2,2);
+    Matrix mat4(mat4v,2,2);
+    Matrix mat3_4(mat3_4v,2,2);
+    CHECK_MESSAGE((mat3 * 2 == mat3_4) == true, "\noutput:\n"
+                                                         << (mat3 * 2) << "expected:\n"
+                                                         << mat3_4);
+    mat4 *= 2;
+    CHECK_MESSAGE((mat4 == mat3_4) == true, "\noutput:\n"
+                                                         << (mat3) << "expected:\n"
+                                                         << mat3_4);
+    }
+}
 
-// }
-// TEST_CASE("NOT THROW")
-// {
-// }
 TEST_CASE("bad input +, -, +=, -= ")
 {
     /*
@@ -36,21 +122,21 @@ TEST_CASE("bad input +, -, +=, -= ")
     {
         vector1.push_back(i);
     }
-     vector<double> vector2;
+    vector<double> vector2;
     for (double i = 0; i < 9; ++i)
     {
         vector2.push_back(i);
     }
-    Matrix A{vector1, 4, 4};
-    Matrix B{vector2, 3, 3};
-    CHECK_THROWS(A + B);
-    CHECK_THROWS(B + A);
-    CHECK_THROWS(A - B);
-    CHECK_THROWS(B - A);
-    CHECK_THROWS(A += B);
-    CHECK_THROWS(B += A);
-    CHECK_THROWS(A -= B);
-    CHECK_THROWS(B -= A);
+    Matrix a{vector1, 4, 4};
+    Matrix b{vector2, 3, 3};
+    CHECK_THROWS(a + b);
+    CHECK_THROWS(b + a);
+    CHECK_THROWS(a - b);
+    CHECK_THROWS(b - a);
+    CHECK_THROWS(a += b);
+    CHECK_THROWS(b += a);
+    CHECK_THROWS(a -= b);
+    CHECK_THROWS(b -= a);
 }
 TEST_CASE("bad input *, *=, ")
 {
@@ -68,65 +154,124 @@ TEST_CASE("bad input *, *=, ")
     {
         vector2.push_back(i);
     }
-    Matrix A{vector1, 4, 4};
-    Matrix B{vector2, 3, 3};
-    CHECK_THROWS(A * B);
-    CHECK_THROWS(B * A);
-    CHECK_THROWS(A *= B);
-    CHECK_THROWS(B *= A);
+    Matrix a{vector1, 4, 4};
+    Matrix b{vector2, 3, 3};
+    CHECK_THROWS(a * b);
+    CHECK_THROWS(b * a);
+    CHECK_THROWS(a *= b);
+    CHECK_THROWS(b *= a);
 }
 
-
-TEST_CASE("Equality between two matrix's")
+TEST_CASE("cheak operator >, >=, <, <= , ==, !=")
 {
-    /**
-     * Given 2 matrix's A and B
-     * Matrix A and Matrix B will call equal if and only if all their numbers equals.
-     * Matrix A will be called bigger than B if and only if the sum of the parts of A biggers then parts of B.
-     * If matrix A and B not from the same shape (different rows and cols size)-an error should be thrown.
-     * If the sum of A and B is equal but not all of their numbers are equal- A are not equal to B.
-     */
-    SUBCASE("Two equal matrix")
+    SUBCASE("same matrix")
     {
-        vector<double> vectorA = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-        vector<double> vectorB = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-        Matrix A{vectorA, 3, 3};
-        Matrix B{vectorB, 3, 3};
-        CHECK_EQ(A == B, true);
-        CHECK_EQ(A != B, false);
-        CHECK_EQ(A < B, false);
-        CHECK_EQ(A > B, false);
-        CHECK_EQ(A <= B, true);
-        CHECK_EQ(A >= B, true);
+        vector<double> vector1;
+        for (double i = 0; i < 9; ++i)
+        {
+            vector1.push_back(i);
+        }
+        vector<double> vector2;
+        for (double i = 0; i < 9; ++i)
+        {
+            vector2.push_back(i);
+        }
+        Matrix a{vector1, 3, 3};
+        Matrix b{vector2, 3, 3};
+        CHECK_EQ(a > b, false);
+        CHECK_EQ(a >= b, true);
+        CHECK_EQ(a < b, false);
+        CHECK_EQ(a <= b, true);
+        CHECK_EQ(a == b, true);
+        CHECK_EQ(a != b, false);
     }
 
-    SUBCASE("A and B is in the same shape, but B is bigger")
+    SUBCASE("a and b same size but differnt values(b have bigger)")
     {
-        vector<double> vectorA = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-        vector<double> vectorB = {9, 9, 9, 9, 9, 9, 9, 9, 9};
-        Matrix A{vectorA, 3, 3};
-        Matrix B{vectorB, 3, 3};
-        CHECK_EQ(A == B, false);
-        CHECK_EQ(A != B, true);
-        CHECK_EQ(A < B, true);
-        CHECK_EQ(A > B, false);
-        CHECK_EQ(A <= B, true);
-        CHECK_EQ(A >= B, false);
+        vector<double> vector1;
+        for (double i = 0; i < 9; ++i)
+        {
+            vector1.push_back(i);
+        }
+        vector<double> vector2;
+        for (double i = 0; i < 9; ++i)
+        {
+            vector2.push_back(9);
+        }
+        Matrix a{vector1, 3, 3};
+        Matrix b{vector2, 3, 3};
+        CHECK_EQ(a > b, false);
+        CHECK_EQ(a >= b, false);
+        CHECK_EQ(a < b, true);
+        CHECK_EQ(a <= b, true);
+        CHECK_EQ(a == b, false);
+        CHECK_EQ(a != b, true);
     }
-    SUBCASE("A and B is in the same shape, but A is bigger")
+    SUBCASE("a and b NOT same size expect throw excp ")
     {
-        vector<double> vectorA = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120};
-        vector<double> vectorB = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-        Matrix A{vectorA, 3, 4};
-        Matrix B{vectorB, 3, 4};
-        CHECK_EQ(A == B, false);
-        CHECK_EQ(A != B, true);
-        CHECK_EQ(A < B, false);
-        CHECK_EQ(A > B, true);
-        CHECK_EQ(A <= B, false);
-        CHECK_EQ(A >= B, true);
-        // Now we will multy B by 10 and A==B
-        B = B * 10;
-        CHECK_EQ(B == A, true);
+        vector<double> vector1;
+        for (double i = 0; i < 9; ++i)
+        {
+            vector1.push_back(i);
+        }
+        vector<double> vector2;
+        for (double i = 0; i < 16; ++i)
+        {
+            vector2.push_back(9);
+        }
+        Matrix a{vector1, 3, 3};
+        Matrix b{vector2, 4, 4};
+        bool trow_exep;
+        int numOfExcep = 0;
+        try
+        {
+            trow_exep = a == b;
+        }
+        catch (const std::exception &)
+        {
+            numOfExcep++;
+        }
+        try
+        {
+            trow_exep = a >= b;
+        }
+        catch (const std::exception &)
+        {
+            numOfExcep++;
+        }
+        try
+        {
+            trow_exep = a <= b;
+        }
+        catch (const std::exception &)
+        {
+            numOfExcep++;
+        }
+        try
+        {
+            trow_exep = a != b;
+        }
+        catch (const std::exception &)
+        {
+            numOfExcep++;
+        }
+        try
+        {
+            trow_exep = a > b;
+        }
+        catch (const std::exception &)
+        {
+            numOfExcep++;
+        }
+        try
+        {
+            trow_exep = a < b;
+        }
+        catch (const std::exception &)
+        {
+            numOfExcep++;
+        }
+        if (numOfExcep == 6)
+            CHECK_MESSAGE(true, "you get all the excep you need!");
     }
 }

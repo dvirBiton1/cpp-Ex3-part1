@@ -45,6 +45,7 @@ namespace zich
         friend ostream & operator << (ostream &out, const Matrix &mat);
         friend istream& operator>> (istream &os , Matrix& mat);
         friend Matrix operator-(Matrix &mat);
+        friend Matrix operator+(Matrix &mat);
         friend Matrix operator*(const double scalar, Matrix &mat);
     };
 

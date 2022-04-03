@@ -32,20 +32,22 @@ Matrix::~Matrix(){
 
 Matrix Matrix::operator+(Matrix const &mat)
 {
-    if (this->row != mat.row || this->col != mat.row)
+    if (this->row != mat.row || this->col != mat.col)
     {
         throw runtime_error("row and col must be equal");
     }
-    Matrix mat3(row, col);
-    mat3.data.resize(size_t(row * col));
+    vector<double> mat3_data;
+    // Matrix mat3(row, col);
+    mat3_data.resize(size_t(row * col));
     // cout<<mat3.data[size_t(1 * (col) + 1)]<<endl;
     for (int i = 0; i < row; i++)
     {
         for (int j = 0; j < col; j++)
         {
-            mat3.data[size_t(i * col + j)] = this->data[size_t(i * col + j)] + mat.data[size_t(i * col + j)];
+            mat3_data[size_t(i * col + j)] = this->data[size_t(i * col + j)] + mat.data[size_t(i * col + j)];
         }
     }
+    Matrix mat3(mat3_data, this->row, mat.col);
     return mat3;
 }
 Matrix &Matrix::operator++()
@@ -73,7 +75,7 @@ Matrix Matrix::operator++(const int num)
 }
 Matrix &Matrix::operator+=(const Matrix &mat)
 {
-    if (this->row != mat.row || this->col != mat.row)
+    if (this->row != mat.row || this->col != mat.col)
     {
         throw runtime_error("row and col must be equal");
     }
@@ -88,19 +90,21 @@ Matrix &Matrix::operator+=(const Matrix &mat)
 }
 Matrix Matrix::operator-(const Matrix &mat)
 {
-    if (this->row != mat.row || this->col != mat.row)
+    if (this->row != mat.row || this->col != mat.col)
     {
         throw runtime_error("row and col must be equal");
     }
-    Matrix mat3(row, col);
-    mat3.data.resize(size_t(row * col));
+    vector<double> mat3_data;
+    mat3_data.resize(size_t(row * col));
     for (int i = 0; i < row; i++)
     {
         for (int j = 0; j < col; j++)
         {
-            mat3.data[size_t(i * col + j)] = this->data[size_t(i * col + j)] - mat.data[size_t(i * col + j)];
+            mat3_data[size_t(i * col + j)] = this->data[size_t(i * col + j)] - mat.data[size_t(i * col + j)];
         }
     }
+    
+    Matrix mat3(mat3_data, this->row, mat.col);
     return mat3;
 }
 Matrix &Matrix::operator--()
@@ -128,7 +132,7 @@ Matrix Matrix::operator--(const int num)
 }
 Matrix &Matrix::operator-=(const Matrix &mat)
 {
-    if (this->row != mat.row || this->col != mat.row)
+    if (this->row != mat.row || this->col != mat.col)
     {
         throw runtime_error("row and col must be equal");
     }
@@ -177,13 +181,18 @@ Matrix &Matrix::operator*=(const Matrix &mat)
     {
         throw runtime_error("the cols must be equal");
     }
+    vector<double> mat3_data;
+    Matrix mat3(this->row, mat.col);
+    mat3_data.resize(size_t(this->row * mat.col));
     for (int i = 0; i < this->row; i++)
     {
         for (int j = 0; j < mat.col; j++)
         {
-            this->data[size_t(i * mat.col + j)] *= multiplication(mat, i, j);
+            mat3_data[size_t(i * mat.col + j)] = multiplication(mat, i, j);
         }
     }
+    this->col = mat.col;
+    this->data = mat3_data;
     return *this;
 }
 
@@ -236,18 +245,34 @@ double Matrix::sumMatrix()
 }
 bool Matrix::operator>(Matrix &mat)
 {
+    if (this->row != mat.row || this->col != mat.col)
+    {
+        throw runtime_error("row and cols must be equals");
+    }
     return this->sumMatrix() > mat.sumMatrix();
 }
 bool Matrix::operator>=(Matrix &mat)
 {
+    if (this->row != mat.row || this->col != mat.col)
+    {
+        throw runtime_error("row and cols must be equals");
+    }
     return this->sumMatrix() >= mat.sumMatrix();
 }
 bool Matrix::operator<(Matrix &mat)
 {
+    if (this->row != mat.row || this->col != mat.col)
+    {
+        throw runtime_error("row and cols must be equals");
+    }
     return this->sumMatrix() < mat.sumMatrix();
 }
 bool Matrix::operator<=(Matrix &mat)
 {
+    if (this->row != mat.row || this->col != mat.col)
+    {
+        throw runtime_error("row and cols must be equals");
+    }
     return this->sumMatrix() <= mat.sumMatrix();
 }
 bool Matrix::operator==(Matrix &mat)
@@ -316,6 +341,22 @@ Matrix operator-(Matrix &mat){
                 continue;
             }
             mat3.data[size_t(i * mat.col + j)] =( -1) * mat.data[size_t(i * mat.col + j)];
+        }
+    }
+    return mat3;
+}
+Matrix operator+(Matrix &mat){
+    Matrix mat3(mat.row, mat.col);
+    mat3.data.resize(size_t(mat.row * mat.col));
+    for (int i = 0; i < mat.row; i++)
+    {
+        for (int j = 0; j < mat.col; j++)
+        {
+            if (mat.data[size_t(i * mat.col + j)] == 0)
+            {
+                continue;
+            }
+            mat3.data[size_t(i * mat.col + j)] = mat.data[size_t(i * mat.col + j)];
         }
     }
     return mat3;
