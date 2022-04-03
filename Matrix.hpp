@@ -7,12 +7,12 @@ namespace zich
 {
     class Matrix
     {
-    public:
+    private:
         int row;
         int col;
         vector<double> data;
 
-    // public:
+    public:
         Matrix(const int row,const int col);
         Matrix(const vector<double> data, const int row, const int col);
         ~Matrix();
