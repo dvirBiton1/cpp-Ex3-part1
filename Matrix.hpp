@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <stdexcept>
+#include <string>
 using namespace std;
 
 namespace zich
@@ -13,8 +14,7 @@ namespace zich
         vector<double> data;
 
     public:
-        Matrix(const int row,const int col);
-        Matrix(const vector<double> data, const int row, const int col);
+        Matrix(const vector<double> &data, const int row, const int col);
         ~Matrix();
         Matrix operator+(Matrix const &mat);
         Matrix& operator++();
@@ -40,10 +40,8 @@ namespace zich
         bool operator!=(Matrix &mat);
         double multiplication(const Matrix &mat, const int tempRow, const int tempCol);
         double sumMatrix();
-        // friend ostream& operator<<(ostream& output, const Matrix& mat);
-        // friend ostream& operator<< (ostream& output, const Matrix& mat);
         friend ostream & operator << (ostream &out, const Matrix &mat);
-        friend istream& operator>> (istream &os , Matrix& mat);
+        friend istream& operator>> (istream &input , Matrix& mat);
         friend Matrix operator-(Matrix &mat);
         friend Matrix operator+(Matrix &mat);
         friend Matrix operator*(const double scalar, Matrix &mat);

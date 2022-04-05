@@ -186,7 +186,7 @@ TEST_CASE("cheak operator >, >=, <, <= , ==, !=")
         CHECK_EQ(a != b, false);
     }
 
-    SUBCASE("a and b same size but differnt values(b have bigger)")
+    SUBCASE("a and b same size but differnt values(b have bigger values)")
     {
         vector<double> vector1;
         for (double i = 0; i < 9; ++i)
@@ -207,7 +207,7 @@ TEST_CASE("cheak operator >, >=, <, <= , ==, !=")
         CHECK_EQ(a == b, false);
         CHECK_EQ(a != b, true);
     }
-    SUBCASE("a and b NOT same size expect throw excp ")
+    SUBCASE("a and b NOT same size, expect throw excp ")
     {
         vector<double> vector1;
         for (double i = 0; i < 9; ++i)
@@ -274,4 +274,18 @@ TEST_CASE("cheak operator >, >=, <, <= , ==, !=")
         if (numOfExcep == 6)
             CHECK_MESSAGE(true, "you get all the excep you need!");
     }
+}
+TEST_CASE("constrctor"){
+    vector<double> vector1;
+        for (double i = 0; i < 9; ++i)
+        {
+            vector1.push_back(i);
+        }
+        vector<double> vector2;
+        for (double i = 0; i < 9; ++i)
+        {
+            vector2.push_back(i);
+        }
+        CHECK_NOTHROW(Matrix a(vector1, 3, 3));
+        CHECK_THROWS(Matrix b(vector2, 4, 3));
 }
